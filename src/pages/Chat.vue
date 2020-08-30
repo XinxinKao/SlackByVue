@@ -7,7 +7,7 @@
                 </div>
 
                 <div class="col-md-8 content">
-                    content
+                    <Messages></Messages>
                 </div>
             </div>
         </div>
@@ -16,13 +16,15 @@
 
 <script>
     import Sidebar from '../sidebar/sidebar';
+    import Messages from '../messages/messages';
     import auth from 'firebase/auth';
 
     export default{
         name: 'Chat',
 
         components: {
-            Sidebar
+            Sidebar,
+            Messages
         }
     }
 </script>
