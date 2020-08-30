@@ -2,6 +2,11 @@
     <div>
         <button @click="openModal" class="btn btn-outline-primary">Add Channel</button>
 
+        <!-- show list of channels -->
+        <div class="mt-4">
+            <button v-for="channel in channels" v-bind:key="channel" class="list-group-item list-group-item-action" type="button">{{ channel.name }}</button>
+        </div>
+
         <!-- Modal copy form bootstrap -->
         <div class="modal fade" id="channelModal">
         <div class="modal-dialog modal-dialog-centered">
@@ -46,7 +51,8 @@
             return {
                 new_channel: '',
                 errors: [],
-                channelsRef: firebase.database().ref('channels')
+                channelsRef: firebase.database().ref('channels'),
+                channels: []
             }
         },
 
@@ -65,6 +71,8 @@
             addChannel(){
                 console.log('add channel');
                 let self = this;
+
+                self.errors = [];
 
                 //get key to the newly creating channel
                 let key = self.channelsRef.push().key;
@@ -86,7 +94,29 @@
                 .catch((error)=>{
                     self.errors.push(error.message);
                 })
+            },
+
+            addListener() {
+                //about firebase document
+                //child_added is triggered once for each existing child and then again every time a new chlid is added to the specified path.
+                this.channelsRef.on('child_added', snapshot => {
+                    console.log('listening channelRef on child_added: ', snapshot.val());
+
+                    this.channels.push(snapshot.val());
+                });
+            },
+
+            detachListener() {
+                this.channelsRef.off('child_added');
             }
+        },
+
+        mounted() {
+            this.addListener();
+        },
+
+        beforeDestroy() {
+            this.detachListener();
         }
     }
 </script>
