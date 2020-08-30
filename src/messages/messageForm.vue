@@ -3,10 +3,10 @@
         <div class="messageForm">
             <form>
                 <div class="input-group mb-3">
-                    <input name="message" id="message" placeholder="Write something" class="form-control mt-3" autofocus>
+                    <input v-model.trim="message" name="message" id="message" placeholder="Write something" class="form-control mt-3" autofocus>
                 
                     <div class="input-group-append">
-                        <button class="btn btn-primary mt-3" type="button">&nbsp; Send &nbsp;</button>
+                        <button @click="sendMessage" class="btn btn-primary mt-3" type="button">&nbsp; Send &nbsp;</button>
                     </div>
 
                     <div class="input-group-append">
@@ -19,8 +19,55 @@
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
+    import database from 'firebase/database';
+
     export default{
-        name: 'MessageForm'
+        name: 'MessageForm',
+
+        data() {
+            return {
+                message: '',
+                errors: []
+            }
+        },
+
+        computed: {
+            ...mapGetters(['currentChannel', 'currentUser'])
+        },
+
+        methods: {
+            sendMessage() {
+                let self = this;
+                
+                let newMessage = {
+                    content: this.message,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP,
+                    user: {
+                        name: this.currentUser.displayName,
+                        avatar: this.currentUser.photoURL,
+                        id: this.currentUser.id
+                    }
+                }
+
+                //use some validation
+                if(self.currentChannel !== null){
+                    if(self.message.length > 0){
+                        console.log(newMessage);
+                        self.$parent.messagesRef.child(this.currentChannel.id).push().set(newMessage)
+                        .then(()=>{
+
+                        })
+                        .catch((error)=>{
+                            self.errors.push(error.message);
+                        });
+
+                        //reset message
+                        this.message = '';
+                    }
+                }
+            }
+        }
     }
 </script>
 
