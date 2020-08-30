@@ -1,23 +1,29 @@
 <template>
     <div>
-        <button class="btn btn-outline-primary">Add Channel</button>
+        <button @click="openModal" class="btn btn-outline-primary">Add Channel</button>
 
         <!-- Modal copy form bootstrap -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal fade" id="channelModal">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title text-dark">Create New Channel</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <div class="modal-body">
-                ...
+                <form>
+                    <div class="form-group">
+                        <input type="text" id="new_channel" name="new_channel" placeholder="Channel Name" class="form-control">
+                    </div>
+                </form>
             </div>
+
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Add Channel</button>
             </div>
             </div>
         </div>
@@ -27,6 +33,12 @@
 
 <script>
     export default{
-        name: 'Channels'
+        name: 'Channels',
+
+        methods: {
+            openModal() {
+                $('#channelModal').appendTo('body').modal('show');
+            }
+        }
     }
 </script>
