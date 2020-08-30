@@ -4,7 +4,7 @@
 
         <!-- show list of channels -->
         <div class="mt-4">
-            <button v-for="channel in channels" v-bind:key="channel" class="list-group-item list-group-item-action" type="button">{{ channel.name }}</button>
+            <button @click="changeChannel(channel)" v-for="channel in channels" v-bind:key="channel" class="list-group-item list-group-item-action" type="button" :class="{'active': setActiveChannel(channel)}">{{ channel.name }}</button>
         </div>
 
         <!-- Modal copy form bootstrap -->
@@ -43,6 +43,7 @@
 
 <script>
     import database from 'firebase/database';
+    import {mapGetters} from 'vuex';
 
     export default{
         name: 'Channels',
@@ -58,6 +59,7 @@
         },
 
         computed: {
+            ...mapGetters(['currentChannel']),
             hsaErrors(){
                 return this.errors.length > 0;
                 //return false;
@@ -118,6 +120,16 @@
 
             detachListener() {
                 this.channelsRef.off('child_added');
+            },
+
+            //set active channel
+            setActiveChannel(channel) {
+                return channel.id === this.currentChannel.id;
+            },
+
+            //change channel
+            changeChannel(channel) {
+                this.$store.dispatch('setCurrentChannel', channel);
             }
         },
 
