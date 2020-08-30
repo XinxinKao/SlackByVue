@@ -52,7 +52,8 @@
                 new_channel: '',
                 errors: [],
                 channelsRef: firebase.database().ref('channels'),
-                channels: []
+                channels: [],
+                channel: null
             }
         },
 
@@ -103,6 +104,15 @@
                     console.log('listening channelRef on child_added: ', snapshot.val());
 
                     this.channels.push(snapshot.val());
+
+                    //set current channel
+                    if(this.channels.length > 0){
+                        //set the first one as current channel
+                        this.channel = this.channels[0];
+
+                        //dispatch current channel to store
+                        this.$store.dispatch('setCurrentChannel', this.channel);                    
+                    }
                 });
             },
 
