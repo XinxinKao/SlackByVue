@@ -41,20 +41,20 @@
                 let self = this;
                 
                 let newMessage = {
-                    content: this.message,
+                    content: self.message,
                     timestamp: firebase.database.ServerValue.TIMESTAMP,
                     user: {
-                        name: this.currentUser.displayName,
-                        avatar: this.currentUser.photoURL,
-                        id: this.currentUser.id
+                        name: self.currentUser.displayName,
+                        avatar: self.currentUser.photoURL,
+                        id: self.currentUser.uid
                     }
                 }
-
+                
                 //use some validation
                 if(self.currentChannel !== null){
                     if(self.message.length > 0){
-                        console.log(newMessage);
-                        self.$parent.messagesRef.child(this.currentChannel.id).push().set(newMessage)
+                        
+                        self.$parent.messagesRef.child(self.currentChannel.id).push().set(newMessage)
                         .then(()=>{
 
                         })
@@ -63,7 +63,7 @@
                         });
 
                         //reset message
-                        this.message = '';
+                        self.message = '';
                     }
                 }
             }
