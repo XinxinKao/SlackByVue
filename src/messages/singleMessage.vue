@@ -7,7 +7,7 @@
 
                     <div class="media-body">
                         <h6 class="mt-0">
-                            <a href="#">{{ message.user.name }}</a> - {{ message.timestamp }}
+                            <a href="#">{{ message.user.name }}</a> - {{ message.timestamp | fromNow }}
                         </h6>
                         <p>{{ message.content }}</p>
                     </div>
@@ -18,8 +18,21 @@
 </template>
 
 <script>
+    import moment from 'moment';
+    import {mapGetters} from 'vuex';
+
     export default{
         name: 'SingleMessage',
-        props: ['messages']
+        props: ['messages'],
+
+        computed: {
+            ...mapGetters(['currentUser'])
+        },
+
+        filters: {
+            fromNow(value) {
+                return moment(value).fromNow();
+            }
+        }
     }
 </script>
