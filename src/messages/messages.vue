@@ -33,6 +33,8 @@
 
         watch: {
             currentChannel: function() {
+                //if current channel changes, watch for its messages
+                this.messages = [];
                 this.addListener();
                 this.channel = this.currentChannel;
             }
@@ -47,8 +49,14 @@
             },
 
             detachListener(){
-
+                if (this.channel !== null){
+                    this.messagesRef.child(this.channel.id).off();
+                }
             }
+        },
+
+        beforeDestroy(){
+            this.detachListener();
         }
     }
 </script>
