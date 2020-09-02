@@ -9,7 +9,7 @@
                         <h6 class="mt-0">
                             <a href="#">{{ message.user.name }}</a> - {{ message.timestamp | fromNow }}
                         </h6>
-                        <p>{{ message.content }}</p>
+                        <p :class="{'self_message': selfMessage(message.user)}">{{ message.content }}</p>
                     </div>
                 </div>
             </div>
@@ -29,6 +29,12 @@
             ...mapGetters(['currentUser'])
         },
 
+        methods: {
+            selfMessage(user) {
+                return user.id === this.currentUser.uid;
+            }
+        },
+
         filters: {
             fromNow(value) {
                 return moment(value).fromNow();
@@ -36,3 +42,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .self_message{
+        border-left: 5px solid red;
+        padding: 0 10px;
+    }
+</style>
