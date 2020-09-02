@@ -1,6 +1,6 @@
 <template>
     <div>
-        <SingleMessage></SingleMessage>
+        <SingleMessage :messages="messages"></SingleMessage>
         <MessageForm></MessageForm>
     </div>
 </template>

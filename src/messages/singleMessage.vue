@@ -6,6 +6,7 @@
 
 <script>
     export default{
-        name: 'SingleMessage'
+        name: 'SingleMessage',
+        props: ['messages']
     }
 </script>
