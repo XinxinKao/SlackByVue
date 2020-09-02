@@ -15,6 +15,10 @@
         <hr style="border: 1px solid #333;">
 
         <Channels></Channels>
+
+        <hr style="border: 1px solid #333;">
+
+        <Users></Users>
     </div>
 </template>
 
@@ -22,12 +26,14 @@
     import auth from 'firebase/auth';
     import {mapGetters} from 'vuex';
     import Channels from './Channels';
+    import Users from './Users';
 
     export default{
         name: 'Sidebar',
 
         components: {
-            Channels
+            Channels,
+            Users
         },
 
         computed: {
