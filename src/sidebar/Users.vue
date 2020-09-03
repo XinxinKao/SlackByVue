@@ -6,7 +6,7 @@
                 <li v-for="user in users" :key="user.uid">
                     <span>
                         <img :src="user.avatar" height="20" class="img rounded-circle">
-                        <span class="text-primary">{{ user.name }}</span>
+                        <span :class="{'text-primary': isOnline(user), 'text-danger': !isOnline(user)}">{{ user.name }}</span>
                     </span>
                 </li>
             </ul>
@@ -46,6 +46,22 @@
                     }
                 });
 
+                //presenceRef child_added
+                this.presenceRef.on('child_added', snapshot => {
+                    if(this.currentUser.uid !== snapshot.key) {
+                        //pass to user status method
+                        this.addStatusToUser(snapshot.key);
+                    }
+                });
+
+                //presenceRef child_removed
+                this.presenceRef.on('child_removed', snapshot => {
+                    if(this.currentUser.uid !== snapshot.key) {
+                        //pass to user status method
+                        this.addStatusToUser(snapshot.key, false);
+                    }
+                });
+
                 //returns 'connected' to every user connected to our application
                 this.connectedRef.on('value', snapshot => {
                     console.log('connected user:', snapshot);
@@ -55,10 +71,26 @@
                         ref.set(true);
                         ref.onDisconnect().remove();
                     }
-                })
+                });
             },
 
-            detachListener() {}
+            //add user status online/offline
+            addStatusToUser(userId, connected = true) {
+                let index = this.users.findIndex(user => user.uid === userId);
+                if(index !== -1) {
+                    connected === true ? this.users[index].status = 'online': this.users[index].status = 'offline';
+                }
+            },
+
+            isOnline(user) {
+                return user.status == 'online';
+            },
+
+            detachListener() {
+                this.usersRef.off();
+                this.presenceRef.off();
+                this.connectedRef.off();
+            }
         },
 
         mounted() {
