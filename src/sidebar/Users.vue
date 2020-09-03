@@ -24,7 +24,9 @@
         data() {
             return {
                 users: [],
-                usersRef: firebase.database().ref('users')
+                usersRef: firebase.database().ref('users'),
+                connectedRef: firebase.database().ref('.info/connected'),
+                presenceRef: firebase.database().ref('presence')
             }
         },
 
@@ -41,6 +43,17 @@
                         user['uid'] = snapshot.key;
                         user['status'] = 'offline';
                         this.users.push(user);
+                    }
+                });
+
+                //returns 'connected' to every user connected to our application
+                this.connectedRef.on('value', snapshot => {
+                    console.log('connected user:', snapshot);
+
+                    if(snapshot.val() === true) {
+                        let ref = this.presenceRef.child(this.currentUser.uid);
+                        ref.set(true);
+                        ref.onDisconnect().remove();
                     }
                 })
             },
