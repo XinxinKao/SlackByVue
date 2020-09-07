@@ -2,14 +2,17 @@
     <div>
         <div class="text-light">
             <h4>Users</h4>
-            <ul class="nav flex-column">
-                <li v-for="user in users" :key="user.uid" @click.prevent="changeChannel(user)">
-                    <span>
-                        <img :src="user.avatar" height="20" class="img rounded-circle">
-                        <span :class="{'text-primary': isOnline(user), 'text-danger': !isOnline(user)}"><a href="#">{{ user.name }}</a></span>
-                    </span>
-                </li>
-            </ul>
+                <div class="mt-4">
+                    <button @click.prevent="changeChannel(user)" v-for="user in users" v-bind:key="user" class="list-group-item list-group-item-action" type="button" :class="{'active': isActive(user)}">
+                        
+                        <span :class="{'fa fa-circle online': isOnline(user), 'fa fa-circle offline': !isOnline(user)}"></span>
+
+                        <span>
+                            <img :src="user.avatar" height="20" class="img rounded-circle">
+                            <span><a :class="{'text-light': isActive(user)}" href="#">{{ user.name }}</a></span>
+                        </span>
+                    </button>
+                </div>
         </div>
     </div>
 </template>
@@ -31,7 +34,7 @@
         },
 
         computed: {
-            ...mapGetters(['currentUser'])
+            ...mapGetters(['currentUser', 'currentChannel'])
         },
 
         methods: {
@@ -104,6 +107,11 @@
                 this.$store.dispatch('setCurrentChannel', channel);
             },
 
+            isActive(user) {
+                let channelId = this.getChannelId(user.uid);
+                return this.currentChannel.id === channelId;
+            },
+
             getChannelId(userId) {
                 //use this format to create channel smallerUserId/biggerUserId
                 return userId < this.currentUser.uid ? userId + '/' + this.currentUser.uid : this.currentUser.uid + '/' + userId;
@@ -119,3 +127,12 @@
         }
     }
 </script>
+
+<style scoped>
+    .online{
+        color: green;
+    }
+    .offline{
+        color: red;
+    }
+</style>
