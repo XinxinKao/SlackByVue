@@ -56,7 +56,7 @@
                         
                         self.$parent.messagesRef.child(self.currentChannel.id).push().set(newMessage)
                         .then(()=>{
-                            this.$nextTick(() => {
+                            self.$nextTick(() => {
                                 $("html, body").scrollTop($(document).height());
                             });
                         })
