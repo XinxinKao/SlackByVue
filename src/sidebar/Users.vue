@@ -100,6 +100,7 @@
                     name: user.name
                 };
                 
+                this.$store.dispatch('setPrivate', true);
                 this.$store.dispatch('setCurrentChannel', channel);
             },
 
