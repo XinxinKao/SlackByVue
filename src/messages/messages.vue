@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h2>{{ channelName }}</h2>
         <SingleMessage :messages="messages"></SingleMessage>
         <MessageForm></MessageForm>
     </div>
@@ -30,7 +31,12 @@
         },
 
         computed: {
-            ...mapGetters(['currentChannel', 'currentUser', 'isPrivate'])
+            ...mapGetters(['currentChannel', 'currentUser', 'isPrivate']),
+            channelName(){
+                if(this.channel !== null){
+                    return this.isPrivate ? '@ ' + this.channel.name : '# ' + this.channel.name;
+                }
+            }
         },
 
         watch: {
