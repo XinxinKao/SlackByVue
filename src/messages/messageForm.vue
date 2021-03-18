@@ -54,7 +54,7 @@
                 if(self.currentChannel !== null){
                     if(self.message.length > 0){
                         
-                        self.$parent.messagesRef.child(self.currentChannel.id).push().set(newMessage)
+                        self.$parent.getMessagesRef().child(self.currentChannel.id).push().set(newMessage)
                         .then(()=>{
                             self.$nextTick(() => {
                                 $("html, body").scrollTop($(document).height());
