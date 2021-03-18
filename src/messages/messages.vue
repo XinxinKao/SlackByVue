@@ -24,7 +24,8 @@
                 messagesRef: firebase.database().ref('messages'),
                 privateMessagesRef: firebase.database().ref('privateMessages'),
                 messages: [],
-                channel: ''
+                channel: null,
+                listeners: []
             }
         },
 
@@ -35,7 +36,7 @@
         watch: {
             currentChannel: function() {
                 //if current channel changes, watch for its messages
-                this.messages = [];
+                this.detachListener();
                 this.addListener();
                 this.channel = this.currentChannel;
             }
@@ -57,13 +58,28 @@
                     this.$nextTick(() => {
                         $("html, body").scrollTop($(document).height());
                     });
-                })
+                });
+
+                this.addToListeners(this.currentChannel.id, ref, 'child_added');
+            },
+
+            addToListeners(id, ref, event){
+                let index = this.listeners.findIndex(el => {
+                    return el.id === id && el.ref === ref && el.event === event;
+                });
+
+                if(index === -1){
+                    this.listeners.push({id: id, ref: ref, event: evnet});
+                }
             },
 
             detachListener(){
-                if (this.channel !== null){
-                    this.messagesRef.child(this.channel.id).off();
-                }
+                this.listeners.forEach(listener => {
+                    listener.ref.child(listener.id).off(listener.event);
+                });
+
+                this.listeners = [];
+                this.messages = [];
             },
 
             getMessagesRef(){                
