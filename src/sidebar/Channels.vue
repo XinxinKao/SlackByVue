@@ -157,11 +157,11 @@
             },
 
             detachListener() {
-                this.channelsRef.off('child_added');
+                this.channelsRef.off();
 
                 this.channels.forEach(el => {
                     this.messagesRef.child(el.id).off();
-                })
+                });
             },
 
             //set active channel
