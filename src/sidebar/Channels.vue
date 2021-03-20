@@ -65,10 +65,18 @@
         },
 
         computed: {
-            ...mapGetters(['currentChannel']),
+            ...mapGetters(['currentChannel', 'isPrivate']),
             hsaErrors(){
                 return this.errors.length > 0;
                 //return false;
+            }
+        },
+
+        watch: {
+            isPrivate(){
+                if(this.isPrivate){
+                    this.resetNotification();
+                }
             }
         },
 
@@ -174,6 +182,10 @@
 
             detachListener() {
                 this.channelsRef.off('child_added');
+
+                this.channels.forEach(el => {
+                    this.messagesRef.child(el.id).off();
+                })
             },
 
             //set active channel
@@ -183,8 +195,19 @@
 
             //change channel
             changeChannel(channel) {
+                this.resetNotification();
                 this.$store.dispatch('setPrivate', false);
                 this.$store.dispatch('setCurrentChannel', channel);
+
+                this.channel = channel;
+            },
+
+            resetNotification(){
+                let index = this.notificationCount.findIndex(el => el.id === this.channel.id);
+                if(index !== -1){
+                    this.notificationCount[index].total = this.notificationCount[index].lastKnownTotal;
+                    this.notificationCount[index].notif = 0;
+                }
             }
         },
 
