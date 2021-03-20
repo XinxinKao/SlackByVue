@@ -4,7 +4,11 @@
 
         <!-- show list of channels -->
         <div class="mt-4">
-            <button @click="changeChannel(channel)" v-for="channel in channels" v-bind:key="channel" class="list-group-item list-group-item-action" type="button" :class="{'active': setActiveChannel(channel)}">{{ channel.name }}</button>
+            <button @click="changeChannel(channel)" v-for="channel in channels" v-bind:key="channel" 
+            class="list-group-item list-group-item-action" type="button" 
+            :class="{'active': setActiveChannel(channel)}">{{ channel.name }} 
+            <span v-if="getNotification(channel) > 0 && channel.id !== currentChannel.id" class="float-right"> {{ getNotification(channel) }} </span>
+            </button>
         </div>
 
         <!-- Modal copy form bootstrap -->
@@ -53,6 +57,8 @@
                 new_channel: '',
                 errors: [],
                 channelsRef: firebase.database().ref('channels'),
+                messagesRef: firebase.database().ref('messages'),
+                notificationCount: [],
                 channels: [],
                 channel: null
             }
@@ -115,7 +121,55 @@
                         //dispatch current channel to store
                         this.$store.dispatch('setCurrentChannel', this.channel);                    
                     }
+
+                    //add count listener to manage the notifications                    
+                    this.addCountListener(snapshot.key);
                 });
+            },
+
+            addCountListener(channelId) {
+                this.messagesRef.child(channelId).on('value', snapshot => {
+                    this.handleNotications(channelId, this.currentChannel.id, this.notificationCount, snapshot);
+                });
+            },
+
+            handleNotications(channelId, currentChannelId, notificationCount, snapshot){
+                let lastTotal = 0;
+
+                //find if channelId is already added to notificationCount[]
+                let index = notificationCount.findIndex(el => el.id === channelId);
+
+                if(index != -1){
+                    if(channelId !== currentChannelId) {
+                        lastTotal = notificationCount[index].total;
+
+                        if(snapshot.numChildren() - lastTotal > 0){
+                            notificationCount[index].notif = snapshot.numChildren() - lastTotal;
+                        }
+                    }
+                    notificationCount[index].lastKnownTotal = snapshot.numChildren();
+                }
+                else{
+                    //push to notificationCount[]
+                    notificationCount.push({
+                        id: channelId,
+                        total: snapshot.numChildren(),
+                        lastKnownTotal: snapshot.numChildren(),
+                        notif: 0
+                    });
+                }
+            },
+
+            getNotification(channel){
+                let notif = 0;
+
+                this.notificationCount.forEach(el => {
+                    if(el.id === channel.id){
+                        notif = el.notif;
+                    }
+                });
+
+                return notif;
             },
 
             detachListener() {
