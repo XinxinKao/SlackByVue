@@ -108,6 +108,8 @@
                 //create new channelsRef
                 self.channelsRef.child(key).update(newChannel)
                 .then(()=>{
+                    //set channel is active when a new channel is added
+                    this.$store.dispatch("setCurrentChannel", newChannel);
                     self.new_channel = '';
                     $('#channelModal').modal('hide');
                 })
