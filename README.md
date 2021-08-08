@@ -1,5 +1,10 @@
 # Slack Example
-A Vue.js project to implenment slack function include login, create channel, send message, send direct message to specify user and see history message.
+A Vue.js project to implenment slack function include : 
+* Login with google
+* Create public channel
+* Send message
+* Send direct message to specify user
+* See history message.
 
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
@@ -31,3 +36,6 @@ npm run dev
 npm run build
 ```
 
+## Not implent feature : 
+* Login with twitter
+* Upload file
