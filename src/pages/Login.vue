@@ -1,7 +1,9 @@
 <template>
     <div>
-        <div class="jumbotron bg-primary text-white text-center">
-            <h2 class="lead display-3">#SLACK#</h2>
+        <div class="jumbotron text-white text-center login-bg">
+            <h2 class="lead display-3">
+                SLACK Example
+            </h2>
             <hr>
             <p>Realtime communication at it's best!</p>
             <hr>
@@ -118,5 +120,9 @@
 <style scoped>
     .btn, .jumbotron {
         border-radius: 0px;
+    }
+
+    .login-bg {
+        background: #4a154b;
     }
 </style>
