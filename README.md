@@ -36,6 +36,6 @@ npm run dev
 npm run build
 ```
 
-## Not implent feature : 
+## The feature will implement in the furture : 
 * Login with twitter
 * Upload file
